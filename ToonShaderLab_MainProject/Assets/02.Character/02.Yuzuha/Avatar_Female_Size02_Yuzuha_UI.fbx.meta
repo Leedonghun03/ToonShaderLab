@@ -3,7 +3,52 @@ guid: f900196cd37b53942bcaa7623d5c103a
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_HairShadow_UI
+    second: {fileID: 2100000, guid: 736a52d4d634f0545a2422223e078ecf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Body_1_Skirt_UI
+    second: {fileID: 2100000, guid: 68cf3b7f84a1220418d88d046ba83fe5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Body_1_UI
+    second: {fileID: 2100000, guid: efeb3ab147c20dd44ba2e815ea01780e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Body_2_UI
+    second: {fileID: 2100000, guid: 9062cf481f2be804d9935a920cabc06e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Eye_UI
+    second: {fileID: 2100000, guid: 9b307b187b6dd0a45ae67d909e21a537, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Eyebrows_UI
+    second: {fileID: 2100000, guid: 570383bbea1592d479a047f72c5473c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Face_UI
+    second: {fileID: 2100000, guid: b07ffd7a11148b643bdced899abf6334, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Hair_T_UI
+    second: {fileID: 2100000, guid: 6095422ad340a624f93b9374c9defb3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MAT_Yuzuha_Weapon_UI
+    second: {fileID: 2100000, guid: 6d80268b5cc9ddf458ff1a5323259ac5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
