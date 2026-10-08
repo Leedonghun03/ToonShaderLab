@@ -1,0 +1,491 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MAT_Yuzuha_Eyebrows_UI
+  m_Shader: {fileID: 4800000, guid: eca425a210831fa45ada82c63ed79395, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _APPLYLIGHTING_ON
+  - _ENABLECOLORHUE_ON
+  - _ENABLEEMISSIONHUE_ON
+  - _ENABLEOUTLINEHUE_ON
+  - _ENABLERIMHUE_ON
+  - _ENABLESTENCIL_ON
+  - _FILTERLIGHT_ON
+  - _MULTILIGHT_ON
+  - _MULTIPLYALBEDO_ON
+  - _RIMGLOW_ON
+  - _USEBUMPMAP_ON
+  - _ZCLIP_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2005
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _EyeColorMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HueMaskTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LightTex:
+        m_Texture: {fileID: 2800000, guid: 7c67d4cd8873a914390c8cb96b5153fa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Lut2DTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: bca09001d59b66849a751290fb0b309a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapTex3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapTex4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapTex5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OtherDataTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OtherDataTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondaryEmissionMaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondaryEmissionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - CharacterLeft: 0
+    - CharacterRight: 0
+    - ShaderBG: 0
+    - ShaderLogo: 0
+    - _AlbedoSmoothness: 0.05
+    - _AlphaCutoff: 0
+    - _ApplyLighting: 1
+    - _AutomaticColorShift: 0
+    - _AutomaticEmissionShift: 0
+    - _AutomaticOutlineShift: 0
+    - _AutomaticRimShift: 0
+    - _Blink: 0
+    - _BlinkFrequency: 1
+    - _BlinkOpacity: 0
+    - _BumpScale: 1
+    - _ColorHue: 0
+    - _ColorHue2: 0
+    - _ColorHue3: 0
+    - _ColorHue4: 0
+    - _ColorHue5: 0
+    - _DebugDiffuse: 0
+    - _DebugEmission: 0
+    - _DebugFaceVector: 0
+    - _DebugLightMap: 0
+    - _DebugLights: 0
+    - _DebugMatcap: 0
+    - _DebugMaterialIDs: 0
+    - _DebugMode: 0
+    - _DebugNormalVector: 0
+    - _DebugOtherData: 0
+    - _DebugOtherData2: 0
+    - _DebugRimLight: 0
+    - _DebugSpecular: 0
+    - _DebugTangent: 0
+    - _DebugUV: 0
+    - _DebugVertexColor: 0
+    - _DiffuseMaskSource: 0
+    - _DisableFOVScalingOL: 0
+    - _DoubleSided: 0
+    - _DoubleUV: 1
+    - _DstBlend: 0
+    - _DstBlendB: 0
+    - _Emission: 0
+    - _EmissionHue: 0
+    - _EmissionHue2: 0
+    - _EmissionHue3: 0
+    - _EmissionHue4: 0
+    - _EmissionHue5: 0
+    - _EmissionMaskSource: 0
+    - _EnableColorHue: 1
+    - _EnableEmissionHue: 1
+    - _EnableHueShift: 0
+    - _EnableLUT: 0
+    - _EnableOutlineHue: 1
+    - _EnableRimHue: 1
+    - _EnableStencil: 1
+    - _FilterLight: 1
+    - _GlobalColorHue: 0
+    - _GlobalEmissionHue: 0
+    - _GlobalOutlineHue: 0
+    - _GlobalRimHue: 0
+    - _Glossiness: 0.5
+    - _HairMatId: 0
+    - _HeadWarning: 0
+    - _HighlightShape: 0
+    - _HighlightShape2: 0
+    - _HighlightShape3: 0
+    - _HighlightShape4: 0
+    - _HighlightShape5: 0
+    - _LegacyOtherData: 0
+    - _LightTexHelp: 0
+    - _MatCap: 0
+    - _MatCapAlphaBurst: 1
+    - _MatCapAlphaBurst2: 0.3
+    - _MatCapAlphaBurst3: 1
+    - _MatCapAlphaBurst4: 0.8
+    - _MatCapAlphaBurst5: 0.8
+    - _MatCapBlendMode: 2
+    - _MatCapBlendMode2: 1
+    - _MatCapBlendMode3: 0
+    - _MatCapBlendMode4: 2
+    - _MatCapBlendMode5: 2
+    - _MatCapColorBurst: 0.15
+    - _MatCapColorBurst2: 1.5
+    - _MatCapColorBurst3: 1
+    - _MatCapColorBurst4: 0.2
+    - _MatCapColorBurst5: 0.2
+    - _MatCapRefract: 0
+    - _MatCapRefract2: 0
+    - _MatCapRefract3: 0
+    - _MatCapRefract4: 0
+    - _MatCapRefract5: 0
+    - _MatCapTexID: 0
+    - _MatCapTexID2: 1
+    - _MatCapTexID3: 100
+    - _MatCapTexID4: 0
+    - _MatCapTexID5: 0
+    - _MatCapUSpeed: 0
+    - _MatCapUSpeed2: 0
+    - _MatCapUSpeed3: 0
+    - _MatCapUSpeed4: 0
+    - _MatCapUSpeed5: 0
+    - _MatCapVSpeed: 0
+    - _MatCapVSpeed2: 0
+    - _MatCapVSpeed3: 0
+    - _MatCapVSpeed4: 0
+    - _MatCapVSpeed5: 0
+    - _MaterialType: 1
+    - _Metallic: 0
+    - _MinStencilAlpha: 0.2
+    - _ModelSize: 1
+    - _ModelSize2: 1
+    - _ModelSize3: 1
+    - _ModelSize4: 1
+    - _ModelSize5: 1
+    - _MultiLight: 1
+    - _MultiplyAlbedo: 1
+    - _MultiplySrcColor: 0
+    - _NormalUV: 3
+    - _NoseLineHoriDisp: 0.85
+    - _NoseLineLkDnDisp: 0.5
+    - _NoseSmoothX: 0
+    - _NoseSmoothY: 0.1
+    - _OtherDataTex2Help: 0
+    - _OtherDataTexHelp: 0
+    - _Outline: 0
+    - _OutlineHue: 0
+    - _OutlineHue2: 0
+    - _OutlineHue3: 0
+    - _OutlineHue4: 0
+    - _OutlineHue5: 0
+    - _OutlineMaskSource: 0
+    - _OutlineWidth: 1
+    - _OutlineZOff: 0
+    - _RefractDepth: 0.5
+    - _RefractDepth2: 0.5
+    - _RefractDepth3: 0.5
+    - _RefractDepth4: 0.5
+    - _RefractDepth5: 0.5
+    - _RimGlow: 1
+    - _RimHue: 0
+    - _RimHue2: 0
+    - _RimHue3: 0
+    - _RimHue4: 0
+    - _RimHue5: 0
+    - _RimMaskSource: 0
+    - _RimWidth: 1
+    - _ScreenImage: 0
+    - _ScreenMaskUV: 0
+    - _ScreenScale: 1
+    - _ScreenTexRotation: 0
+    - _ScreenUVEnum: 2
+    - _ScreenUVSource: 2
+    - _SecondaryEmission: 0
+    - _SecondaryEmissionChannel: 0
+    - _SecondaryEmissionMaskChannel: 0
+    - _SecondaryEmissionTexRotation: 0
+    - _SecondaryEmissionUseUV2: 0
+    - _ShapeSoftness: 0.1
+    - _ShapeSoftness2: 0.1
+    - _ShapeSoftness3: 0.1
+    - _ShapeSoftness4: 0.1
+    - _ShapeSoftness5: 0.1
+    - _ShiftColorSpeed: 0
+    - _ShiftEmissionSpeed: 0
+    - _ShiftOutlineSpeed: 0
+    - _ShiftRimSpeed: 0
+    - _ShowTextureTips: 0
+    - _SkinMatId: 0
+    - _SpecIntensity: 0.1
+    - _SpecularRange: 1
+    - _SpecularRange2: 1
+    - _SpecularRange3: 1
+    - _SpecularRange4: 1
+    - _SpecularRange5: 1
+    - _SrcBlend: 1
+    - _SrcBlendB: 1
+    - _StencilCompA: 5
+    - _StencilCompB: 7
+    - _StencilHelp0: 0
+    - _StencilPassA: 0
+    - _StencilPassB: 2
+    - _StencilRef: 5
+    - _SymmetryUV: 0
+    - _ToonSpecular: 0.01
+    - _ToonSpecular2: 0.01
+    - _ToonSpecular3: 0.01
+    - _ToonSpecular4: 0.01
+    - _ToonSpecular5: 0.01
+    - _UseAlpha: 0
+    - _UseBumpMap: 1
+    - _UseHueMask: 0
+    - _UseLegacyFace: 0
+    - _UseLightMapOL: 0
+    - _UseMatCapMask: 0
+    - _UseSelfShadow: 0
+    - _ZClip: 1
+    - _ZTesting: 2
+    - _ZWrite: 0
+    - end_alpha: 0
+    - end_alpha_burst: 0
+    - end_blend_mode: 0
+    - end_blending: 0
+    - end_color: 0
+    - end_color_burst: 0
+    - end_colorhue: 0
+    - end_debug: 0
+    - end_directions: 0
+    - end_emission: 0
+    - end_face: 0
+    - end_glowhue: 0
+    - end_headmatrix: 0
+    - end_highlight_shape: 0
+    - end_hueshift: 0
+    - end_lighting: 0
+    - end_lut: 0
+    - end_main: 0
+    - end_matcap_params: 0
+    - end_matcap_tint: 0
+    - end_materialID: 0
+    - end_model_size: 0
+    - end_normalmap: 0
+    - end_nosesettings: 0
+    - end_outline: 0
+    - end_outline_color: 0
+    - end_outlinehue: 0
+    - end_post_colors: 0
+    - end_reflection: 0
+    - end_refract: 0
+    - end_refract_depth: 0
+    - end_refract_param: 0
+    - end_rflmatcap: 0
+    - end_rimglowlight_color: 0
+    - end_rimhue: 0
+    - end_rimlight: 0
+    - end_screen_image: 0
+    - end_secondaryemission: 0
+    - end_shadow: 0
+    - end_shadow_colors: 0
+    - end_shallow_color: 0
+    - end_shape_softness: 0
+    - end_special_effects: 0
+    - end_specular: 0
+    - end_specular_color: 0
+    - end_specular_range: 0
+    - end_speed: 0
+    - end_stencil: 0
+    - end_stencil_a: 0
+    - end_stencil_b: 0
+    - end_stencil_options: 0
+    - end_stencilalpha: 0
+    - end_tex_id: 0
+    - end_toon_specular: 0
+    - end_ui_sun_color: 0
+    - end_uvoptions: 0
+    - footer_discord: 0
+    - footer_github: 0
+    - shader_is_using_HoyoToon_editor: 69
+    - shader_is_using_hoyeditor: 0
+    - start_alpha: 0
+    - start_alpha_burst: 0
+    - start_blend_mode: 0
+    - start_blending: 0
+    - start_color: 0
+    - start_color_burst: 0
+    - start_colorhue: 0
+    - start_debug: 0
+    - start_directions: 0
+    - start_emission: 0
+    - start_face: 0
+    - start_glowhue: 0
+    - start_headmatrix: 0
+    - start_highlight_shape: 0
+    - start_hueshift: 0
+    - start_lighting: 0
+    - start_lut: 0
+    - start_main: 0
+    - start_matcap_params: 0
+    - start_matcap_tint: 0
+    - start_materialID: 0
+    - start_model_size: 0
+    - start_normalmap: 0
+    - start_nosesettings: 0
+    - start_outline: 0
+    - start_outline_color: 0
+    - start_outlinehue: 0
+    - start_post_colors: 0
+    - start_reflection: 0
+    - start_refract: 0
+    - start_refract_depth: 0
+    - start_refract_param: 0
+    - start_rflmatcap: 0
+    - start_rimglowlight_color: 0
+    - start_rimhue: 0
+    - start_rimlight: 0
+    - start_screen_image: 0
+    - start_secondaryemission: 0
+    - start_shadow: 0
+    - start_shadow_colors: 0
+    - start_shallow_color: 0
+    - start_shape_softness: 0
+    - start_special_effects: 0
+    - start_specular: 0
+    - start_specular_color: 0
+    - start_specular_range: 0
+    - start_speed: 0
+    - start_stencil: 0
+    - start_stencil_a: 0
+    - start_stencil_b: 0
+    - start_stencil_options: 0
+    - start_stencilalpha: 0
+    - start_tex_id: 0
+    - start_toon_specular: 0
+    - start_ui_sun_color: 0
+    - start_uvoptions: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _Color3: {r: 1, g: 1, b: 1, a: 1}
+    - _Color4: {r: 1, g: 1, b: 1, a: 1}
+    - _Color5: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _HeadMatrixWS2OS0: {r: 1, g: 0, b: 0, a: 0}
+    - _HeadMatrixWS2OS1: {r: 0, g: 1, b: 0, a: 0}
+    - _HeadMatrixWS2OS2: {r: 0, g: 0, b: 1, a: 0}
+    - _HeadMatrixWS2OS3: {r: 1, g: 1, b: 1, a: 0}
+    - _HeadSphereNormalCenter: {r: 1, g: 1, b: 1, a: 0}
+    - _Lut2DTexParam: {r: 0.00098, g: 0.03125, b: 31, a: 0}
+    - _MatCapColorTint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCapColorTint2: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCapColorTint3: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCapColorTint4: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCapColorTint5: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 1, g: 0.7379107, b: 0.7379107, a: 1}
+    - _OutlineColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor3: {r: 1, g: 0.5, b: 0.5, a: 1}
+    - _OutlineColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _PostFrontTint: {r: 1, g: 0.99607843, b: 0.92941177, a: 1}
+    - _PostShadowFadeTint: {r: 0.92941177, g: 0.8509804, b: 0.8431372, a: 1}
+    - _PostShadowTint: {r: 0.8509804, g: 0.78039217, b: 0.77254903, a: 1}
+    - _PostShallowFadeTint: {r: 0.8745098, g: 0.8, b: 0.7921569, a: 1}
+    - _PostShallowTint: {r: 0.95686275, g: 0.96078426, b: 0.9019608, a: 1}
+    - _PostSssTint: {r: 1, g: 0.9481711, b: 0.92941177, a: 1}
+    - _RefractParam: {r: 5, g: 5, b: 0, a: 0}
+    - _RefractParam2: {r: 5, g: 5, b: 0, a: 0}
+    - _RefractParam3: {r: 5, g: 5, b: 0, a: 0}
+    - _RefractParam4: {r: 5, g: 5, b: 0, a: 0}
+    - _RefractParam5: {r: 5, g: 5, b: 0, a: 0}
+    - _RimGlowLightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimGlowLightColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _RimGlowLightColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _RimGlowLightColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _RimGlowLightColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _ScreenColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ScreenImageUvMove: {r: 0, g: 0, b: 0, a: 0}
+    - _ScreenTexRotationAxis: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _SecondaryEmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SecondaryEmissionTexSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _ShadowColor: {r: 0.97999996, g: 0.8918, b: 0.8918, a: 1}
+    - _ShadowColor2: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    - _ShadowColor3: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - _ShadowColor4: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - _ShadowColor5: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - _ShallowColor: {r: 1, g: 0.95686275, b: 0.9490196, a: 1}
+    - _ShallowColor2: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    - _ShallowColor3: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _ShallowColor4: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _ShallowColor5: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _UISunColor: {r: 1, g: 0.92, b: 0.9, a: 1}
+    - _UISunColor2: {r: 1, g: 0.92, b: 0.9, a: 1}
+    - _UISunColor3: {r: 1, g: 0.92, b: 0.9, a: 1}
+    - _UISunColor4: {r: 1, g: 0.92, b: 0.9, a: 1}
+    - _UISunColor5: {r: 1, g: 0.92, b: 0.9, a: 1}
+    - _headForwardVector: {r: 0, g: 0, b: 1, a: 0}
+    - _headRightVector: {r: -1, g: 0, b: 0, a: 0}
+    - _headUpVector: {r: 0, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
