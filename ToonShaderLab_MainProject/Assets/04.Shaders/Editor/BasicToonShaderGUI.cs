@@ -36,6 +36,7 @@ namespace ToonShaderLab.Editor
             var baseColor = FindProperty("_BaseColor", properties);
             var litColor = FindProperty("_LitColor", properties);
             var shadowColor = FindProperty("_ShadowColor", properties);
+            var shadowStrength = FindProperty("_ShadowStrength", properties);
             var threshold = FindProperty("_ShadeThreshold", properties);
             var softness = FindProperty("_ShadeSoftness", properties);
             var displayMode = FindProperty("_DisplayMode", properties);
@@ -47,7 +48,7 @@ namespace ToonShaderLab.Editor
 
             DrawSection("1. 기본 색상", ref baseOpen, () => DrawBase(materialEditor, baseMap, baseColor));
             DrawSection("2. 툰 명암", ref shadingOpen, () =>
-                DrawShading(materialEditor, properties, litColor, shadowColor, threshold, softness));
+                DrawShading(materialEditor, properties, litColor, shadowColor, shadowStrength, threshold, softness));
             DrawSection("3. 화면 확인", ref previewOpen, () => DrawPreview(materialEditor, displayMode));
             DrawSection("추가 설정", ref advancedOpen, () =>
                 DrawPopup(materialEditor, cull, new GUIContent("표시할 면", "기본은 앞면만 표시합니다. 투명 표현을 켜는 기능은 아닙니다."), VisibleFaces));
@@ -84,15 +85,18 @@ namespace ToonShaderLab.Editor
         }
 
         private static void DrawShading(MaterialEditor editor, MaterialProperty[] properties,
-            MaterialProperty lit, MaterialProperty shadow, MaterialProperty threshold, MaterialProperty softness)
+            MaterialProperty lit, MaterialProperty shadow, MaterialProperty strength,
+            MaterialProperty threshold, MaterialProperty softness)
         {
             DrawColor(editor, lit, new GUIContent("밝은 영역 색", "밝은 영역에 곱하는 색입니다. 흰색을 기준으로 조절하세요."));
-            DrawColor(editor, shadow, new GUIContent("어두운 영역 색", "어두운 영역에 곱하는 색입니다. 검정에 가까울수록 어두워집니다."));
+            DrawColor(editor, shadow, new GUIContent("그림자 색", "어두운 영역에 곱하는 색입니다. 그림자 강도에 따라 밝은 영역 색과 섞입니다."));
+            editor.ShaderProperty(strength, new GUIContent("그림자 강도", "0: 밝은 영역 색만 사용 / 1: 그림자 색을 모두 반영. 명암 경계 위치와 광원의 색·세기는 유지합니다."));
+            EditorGUILayout.LabelField("부위별 머티리얼을 선택하면 색과 강도를 각각 조절할 수 있습니다.", EditorStyles.wordWrappedMiniLabel);
             editor.ShaderProperty(threshold, new GUIContent("명암 경계", "값을 높일수록 어두운 영역이 넓어집니다. 기본값은 0입니다."));
             editor.ShaderProperty(softness, new GUIContent("경계 부드러움", "값이 작으면 경계가 또렷하고, 크면 부드럽게 이어집니다. 기본값은 0.05입니다."));
             EditorGUILayout.LabelField("명암 경계 ↑ : 어두운 영역 증가 / 부드러움 ↑ : 완만한 경계", EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.Space(4);
-            if (GUILayout.Button(new GUIContent("명암 설정 초기화", "선택한 머티리얼의 명암 색 / 경계 / 부드러움을 셰이더 기본값으로 되돌립니다. 텍스처와 전체 색상은 유지합니다. Ctrl+Z로 취소할 수 있습니다.")))
+            if (GUILayout.Button(new GUIContent("명암 설정 초기화", "선택한 머티리얼의 명암 색 / 강도 / 경계 / 부드러움을 셰이더 공통 기본값으로 되돌립니다. 강도는 1이며 얼굴용 시작값도 초기화됩니다. 텍스처와 전체 색상은 유지합니다. Ctrl+Z로 취소할 수 있습니다.")))
                 ResetShading(editor, properties);
         }
 
@@ -110,7 +114,7 @@ namespace ToonShaderLab.Editor
                 ? "주 방향광의 회전을 바꿔 명암을 확인하세요. 최종 결과는 광원의 색과 세기도 반영합니다."
                 : selected == 1
                     ? "텍스처와 전체 색상만 표시합니다. 카메라 후처리는 별도로 적용될 수 있습니다."
-                    : "흰색은 밝은 영역, 검정색은 어두운 영역입니다. 확인이 끝나면 최종 결과로 돌아오세요.";
+                    : "색과 강도를 적용하기 전의 영역입니다. 흰색은 밝은 영역, 검정색은 어두운 영역입니다. 그림자 강도는 최종 결과에서 확인하세요.";
             EditorGUILayout.HelpBox(message, MessageType.None);
         }
 
@@ -147,13 +151,14 @@ namespace ToonShaderLab.Editor
 
         private static void ResetShading(MaterialEditor editor, MaterialProperty[] properties)
         {
-            // 4개 속성을 한 번의 Undo로 되돌릴 수 있도록 묶는다.
+            // 명암 속성을 한 번의 Undo로 되돌릴 수 있도록 묶는다.
             Undo.IncrementCurrentGroup();
             int group = Undo.GetCurrentGroup();
             Undo.SetCurrentGroupName("툰 명암 설정 초기화");
             editor.RegisterPropertyChangeUndo("툰 명암 설정 초기화");
             FindProperty("_LitColor", properties).colorValue = Color.white;
             FindProperty("_ShadowColor", properties).colorValue = new Color(0.78f, 0.70f, 0.76f, 1);
+            FindProperty("_ShadowStrength", properties).floatValue = 1;
             FindProperty("_ShadeThreshold", properties).floatValue = 0;
             FindProperty("_ShadeSoftness", properties).floatValue = 0.05f;
             Undo.CollapseUndoOperations(group);

@@ -6,6 +6,7 @@ Shader "ToonShaderLab/Basic Toon"
         [MainColor] _BaseColor("Base Tint", Color) = (1,1,1,1)
         _LitColor("Lit Tint", Color) = (1,1,1,1)
         _ShadowColor("Shadow Tint", Color) = (0.78,0.70,0.76,1)
+        _ShadowStrength("Shadow Strength", Range(0,1)) = 1
         _ShadeThreshold("Shade Threshold", Range(-1,1)) = 0
         _ShadeSoftness("Shade Softness", Range(0.001,0.5)) = 0.05
         [Enum(Composite,0,Texture Only,1,Shading Only,2)] _DisplayMode("Display Mode", Float) = 0
@@ -51,9 +52,11 @@ Shader "ToonShaderLab/Basic Toon"
                 if (_DisplayMode > 1.5)
                     return half4(lightBand.xxx, 1);
 
-                // 3. 어두운 색과 밝은 색을 섞어 텍스처에 곱한다.
+                // 3. 경계 위치는 유지하고 머티리얼별로 그림자색의 반영량을 조절한다.
+                // 강도 0은 밝은 영역 색, 강도 1은 기존 툰 명암과 같다.
                 // 실시간 그림자 수신, 추가 광원, 반사, GI는 아직 계산하지 않는다.
-                half3 toonTint = lerp(_ShadowColor.rgb, _LitColor.rgb, lightBand);
+                half shadowAmount = (1.0h - lightBand) * saturate(_ShadowStrength);
+                half3 toonTint = lerp(_LitColor.rgb, _ShadowColor.rgb, shadowAmount);
                 half3 color = baseColor * toonTint * mainLight.color * mainLight.distanceAttenuation;
                 color = MixFog(color, input.fogFactor);
                 return half4(color, 1);
