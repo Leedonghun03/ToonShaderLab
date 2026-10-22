@@ -12,6 +12,7 @@ namespace ToonShaderLab.Editor
     {
         private bool baseOpen = true;
         private bool shadingOpen = true;
+        private bool outlineOpen = true;
         private bool previewOpen = true;
         private bool advancedOpen;
         private bool uvOpen;
@@ -39,17 +40,22 @@ namespace ToonShaderLab.Editor
             var shadowStrength = FindProperty("_ShadowStrength", properties);
             var threshold = FindProperty("_ShadeThreshold", properties);
             var softness = FindProperty("_ShadeSoftness", properties);
+            var outlineEnabled = FindProperty("_OutlineEnabled", properties);
+            var outlineWidth = FindProperty("_OutlineWidth", properties);
+            var outlineColor = FindProperty("_OutlineColor", properties);
             var displayMode = FindProperty("_DisplayMode", properties);
             var cull = FindProperty("_Cull", properties);
 
-            EditorGUILayout.LabelField("ToonShaderLab / 기본 툰 명암", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("텍스처와 빛 방향으로 기본 명암을 조절합니다.", EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.LabelField("ToonShaderLab / 툰 명암과 아웃라인", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("부위별 색상 / 명암 / 외곽선을 조절합니다.", EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.Space(6);
 
             DrawSection("1. 기본 색상", ref baseOpen, () => DrawBase(materialEditor, baseMap, baseColor));
             DrawSection("2. 툰 명암", ref shadingOpen, () =>
                 DrawShading(materialEditor, properties, litColor, shadowColor, shadowStrength, threshold, softness));
-            DrawSection("3. 화면 확인", ref previewOpen, () => DrawPreview(materialEditor, displayMode));
+            DrawSection("3. 아웃라인", ref outlineOpen, () =>
+                DrawOutline(materialEditor, outlineEnabled, outlineWidth, outlineColor));
+            DrawSection("4. 화면 확인", ref previewOpen, () => DrawPreview(materialEditor, displayMode));
             DrawSection("추가 설정", ref advancedOpen, () =>
                 DrawPopup(materialEditor, cull, new GUIContent("표시할 면", "기본은 앞면만 표시합니다. 투명 표현을 켜는 기능은 아닙니다."), VisibleFaces));
         }
@@ -90,7 +96,7 @@ namespace ToonShaderLab.Editor
         {
             DrawColor(editor, lit, new GUIContent("밝은 영역 색", "밝은 영역에 곱하는 색입니다. 흰색을 기준으로 조절하세요."));
             DrawColor(editor, shadow, new GUIContent("그림자 색", "어두운 영역에 곱하는 색입니다. 그림자 강도에 따라 밝은 영역 색과 섞입니다."));
-            editor.ShaderProperty(strength, new GUIContent("그림자 강도", "0: 밝은 영역 색만 사용 / 1: 그림자 색을 모두 반영. 명암 경계 위치와 광원의 색·세기는 유지합니다."));
+            editor.ShaderProperty(strength, new GUIContent("그림자 강도", "0: 밝은 영역 색만 사용 / 1: 그림자 색을 모두 반영. 명암 경계 위치와 광원의 색 / 세기는 유지합니다."));
             EditorGUILayout.LabelField("부위별 머티리얼을 선택하면 색과 강도를 각각 조절할 수 있습니다.", EditorStyles.wordWrappedMiniLabel);
             editor.ShaderProperty(threshold, new GUIContent("명암 경계", "값을 높일수록 어두운 영역이 넓어집니다. 기본값은 0입니다."));
             editor.ShaderProperty(softness, new GUIContent("경계 부드러움", "값이 작으면 경계가 또렷하고, 크면 부드럽게 이어집니다. 기본값은 0.05입니다."));
@@ -98,6 +104,19 @@ namespace ToonShaderLab.Editor
             EditorGUILayout.Space(4);
             if (GUILayout.Button(new GUIContent("명암 설정 초기화", "선택한 머티리얼의 명암 색 / 강도 / 경계 / 부드러움을 셰이더 공통 기본값으로 되돌립니다. 강도는 1이며 얼굴용 시작값도 초기화됩니다. 텍스처와 전체 색상은 유지합니다. Ctrl+Z로 취소할 수 있습니다.")))
                 ResetShading(editor, properties);
+        }
+
+        private static void DrawOutline(MaterialEditor editor, MaterialProperty enabled,
+            MaterialProperty width, MaterialProperty color)
+        {
+            editor.ShaderProperty(enabled, new GUIContent("아웃라인 사용", "표면 방향으로 확장한 메시의 뒷면을 그립니다. 부위별로 켜고 끌 수 있습니다."));
+            using (new EditorGUI.DisabledScope(!enabled.hasMixedValue && enabled.floatValue < 0.5f))
+            {
+                editor.ShaderProperty(width, new GUIContent("두께 (픽셀)", "렌더링 해상도 기준 두께입니다. 0이면 선이 사라집니다. 렌더 스케일 / 후처리에 따라 최종 화면의 두께는 달라질 수 있습니다."));
+                DrawColor(editor, color, new GUIContent("선 색상", "이 부위의 외곽선 색상입니다. 머리카락과 피부는 서로 다른 색상으로 조절할 수 있습니다."));
+            }
+            EditorGUILayout.LabelField("텍스처만 보기 / 명암만 보기에서는 아웃라인을 숨깁니다.", EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.LabelField("Scene / Game 화면에서 확인하세요. 머티리얼 미리보기에는 아웃라인이 표시되지 않습니다.", EditorStyles.wordWrappedMiniLabel);
         }
 
         private static void DrawPreview(MaterialEditor editor, MaterialProperty mode)

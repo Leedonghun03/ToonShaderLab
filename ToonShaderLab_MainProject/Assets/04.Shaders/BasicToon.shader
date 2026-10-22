@@ -9,6 +9,9 @@ Shader "ToonShaderLab/Basic Toon"
         _ShadowStrength("Shadow Strength", Range(0,1)) = 1
         _ShadeThreshold("Shade Threshold", Range(-1,1)) = 0
         _ShadeSoftness("Shade Softness", Range(0.001,0.5)) = 0.05
+        [ToggleUI] _OutlineEnabled("Outline Enabled", Float) = 0
+        _OutlineWidth("Outline Width (Pixels)", Range(0,5)) = 1
+        _OutlineColor("Outline Color", Color) = (0.18,0.12,0.15,1)
         [Enum(Composite,0,Texture Only,1,Shading Only,2)] _DisplayMode("Display Mode", Float) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Float) = 2
     }
@@ -61,6 +64,25 @@ Shader "ToonShaderLab/Basic Toon"
                 color = MixFog(color, input.fogFactor);
                 return half4(color, 1);
             }
+            ENDHLSL
+        }
+
+        // Render Objects가 ToonOutline 태그를 선택하여 불투명 표면 다음에 그린다.
+        Pass
+        {
+            Name "ToonOutline"
+            Tags { "LightMode"="ToonOutline" }
+            Cull Front
+            // 뒤에 그리는 Skybox가 외곽선을 덮지 않도록 깊이도 기록한다.
+            ZWrite On
+            ZTest LEqual
+            HLSLPROGRAM
+            #pragma target 3.0
+            #pragma vertex ToonOutlineVertex
+            #pragma fragment ToonOutlineFragment
+            #pragma multi_compile_instancing
+            #pragma multi_compile_fog
+            #include "BasicToonOutline.hlsl"
             ENDHLSL
         }
 

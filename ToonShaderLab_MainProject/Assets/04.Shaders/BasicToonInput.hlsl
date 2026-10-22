@@ -12,9 +12,12 @@ CBUFFER_START(UnityPerMaterial)
     half4 _BaseColor;
     half4 _LitColor;
     half4 _ShadowColor;
+    half4 _OutlineColor;
     float _ShadowStrength;
     float _ShadeThreshold;
     float _ShadeSoftness;
+    float _OutlineEnabled;
+    float _OutlineWidth;
     float _DisplayMode;
     float _Cull;
 CBUFFER_END
