@@ -5,6 +5,12 @@
 
 TEXTURE2D(_BaseMap);
 SAMPLER(sampler_BaseMap);
+TEXTURE2D(_HighlightMask);
+SAMPLER(sampler_HighlightMask);
+TEXTURE2D(_MaterialMask);
+SAMPLER(sampler_MaterialMask);
+TEXTURE2D(_SurfaceMask);
+SAMPLER(sampler_SurfaceMask);
 
 // 모든 패스가 같은 배치를 사용하여 SRP Batcher와 호환되도록 한다.
 CBUFFER_START(UnityPerMaterial)
@@ -13,6 +19,7 @@ CBUFFER_START(UnityPerMaterial)
     half4 _LitColor;
     half4 _ShadowColor;
     half4 _OutlineColor;
+    half4 _HighlightColor;
     float _ShadowStrength;
     float _ShadeThreshold;
     float _ShadeSoftness;
@@ -20,6 +27,9 @@ CBUFFER_START(UnityPerMaterial)
     float _OutlineWidth;
     float _DisplayMode;
     float _Cull;
+    float _HighlightEnabled;
+    float _HighlightIntensity;
+    float _HighlightSmoothness;
 CBUFFER_END
 
 struct ToonAttributes
@@ -35,6 +45,8 @@ struct ToonVaryings
     float2 uv : TEXCOORD0;
     float3 normalWS : TEXCOORD1;
     half fogFactor : TEXCOORD2;
+    float3 positionWS : TEXCOORD3;
+    float2 maskUV : TEXCOORD4;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -49,6 +61,9 @@ ToonVaryings ToonVertex(ToonAttributes input)
     output.normalWS = TransformObjectToWorldNormal(input.normalOS);
     output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
     output.fogFactor = ComputeFogFactor(output.positionCS.z);
+    output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+    // 재질 데이터와 부위 마스크는 기본색의 타일링과 독립적인 원본 UV0를 사용한다.
+    output.maskUV = input.uv;
     return output;
 }
 

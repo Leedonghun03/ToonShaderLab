@@ -12,7 +12,15 @@ Shader "ToonShaderLab/Basic Toon"
         [ToggleUI] _OutlineEnabled("Outline Enabled", Float) = 0
         _OutlineWidth("Outline Width (Pixels)", Range(0,5)) = 1
         _OutlineColor("Outline Color", Color) = (0.18,0.12,0.15,1)
-        [Enum(Composite,0,Texture Only,1,Shading Only,2)] _DisplayMode("Display Mode", Float) = 0
+        [ToggleUI] _HighlightEnabled("Highlight Enabled", Float) = 0
+        [NoScaleOffset] _HighlightMask("Highlight Region (R)", 2D) = "black" {}
+        [NoScaleOffset] _MaterialMask("Material Data (G Metallic / B Specular)", 2D) = "black" {}
+        [NoScaleOffset] _SurfaceMask("Surface Data (G Smoothness)", 2D) = "black" {}
+        _HighlightColor("Highlight Color", Color) = (1,1,1,1)
+        _HighlightIntensity("Highlight Intensity", Range(0,8)) = 2
+        _HighlightSmoothness("Highlight Smoothness Scale", Range(0,2)) = 1
+        // 8개 표시 모드는 BasicToonShaderGUI의 팝업에서 관리한다.
+        _DisplayMode("Display Mode", Float) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Float) = 2
     }
     SubShader
@@ -36,13 +44,14 @@ Shader "ToonShaderLab/Basic Toon"
             #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
             #include "BasicToonInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "BasicToonHighlight.hlsl"
 
             half4 ToonFragment(ToonVaryings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                // 1. UV로 기본 색을 읽는다. 데이터 마스크는 다음 단계에서 별도로 추가한다.
+                // 1. UV로 기본 색을 읽는다. 원본 UV의 데이터 마스크는 별도로 읽는다.
                 half3 baseColor = ReadBaseColor(input.uv);
                 if (_DisplayMode > 0.5 && _DisplayMode < 1.5)
                     return half4(baseColor, 1);
@@ -52,15 +61,35 @@ Shader "ToonShaderLab/Basic Toon"
                 float3 normalWS = NormalizeNormalPerPixel(input.normalWS);
                 float3 lightDirectionWS = SafeNormalize(mainLight.direction);
                 half lightBand = EvaluateLightBand(normalWS, lightDirectionWS);
-                if (_DisplayMode > 1.5)
+                if (_DisplayMode > 1.5 && _DisplayMode < 2.5)
                     return half4(lightBand.xxx, 1);
+
+                half3 highlight = 0;
+                if (_HighlightEnabled > 0.5 || _DisplayMode > 2.5)
+                {
+                    ToonHighlightData data = ReadHighlightData(input.maskUV);
+                    if (_DisplayMode > 2.5 && _DisplayMode < 3.5)
+                        return half4(data.region.xxx, 1);
+                    if (_DisplayMode > 3.5 && _DisplayMode < 4.5)
+                        return half4(data.metallic.xxx, 1);
+                    if (_DisplayMode > 4.5 && _DisplayMode < 5.5)
+                        return half4(data.specularMask.xxx, 1);
+                    if (_DisplayMode > 5.5 && _DisplayMode < 6.5)
+                        return half4(data.smoothness.xxx, 1);
+                    float3 viewDirectionWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+                    highlight = EvaluateToonHighlight(data, normalWS, lightDirectionWS, viewDirectionWS, lightBand)
+                        * mainLight.color * mainLight.distanceAttenuation;
+                }
+                if (_DisplayMode > 6.5)
+                    return half4(highlight, 1);
 
                 // 3. 경계 위치는 유지하고 머티리얼별로 그림자색의 반영량을 조절한다.
                 // 강도 0은 밝은 영역 색, 강도 1은 기존 툰 명암과 같다.
-                // 실시간 그림자 수신, 추가 광원, 반사, GI는 아직 계산하지 않는다.
+                // 실시간 그림자 수신, 추가 광원, 환경 반사, GI는 아직 계산하지 않는다.
                 half shadowAmount = (1.0h - lightBand) * saturate(_ShadowStrength);
                 half3 toonTint = lerp(_LitColor.rgb, _ShadowColor.rgb, shadowAmount);
                 half3 color = baseColor * toonTint * mainLight.color * mainLight.distanceAttenuation;
+                color += highlight;
                 color = MixFog(color, input.fogFactor);
                 return half4(color, 1);
             }
