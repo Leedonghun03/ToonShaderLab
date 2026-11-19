@@ -14,6 +14,7 @@ namespace ToonShaderLab.Editor
         private bool shadingOpen = true;
         private bool outlineOpen = true;
         private bool highlightOpen = true;
+        private bool emissionOpen = true;
         private bool previewOpen = true;
         private bool advancedOpen;
         private bool uvOpen;
@@ -27,7 +28,9 @@ namespace ToonShaderLab.Editor
             new GUIContent("금속성 (M.G)", "재질 마스크의 G 채널을 표시합니다."),
             new GUIContent("반사 마스크 (M.B)", "재질 마스크의 B 채널을 표시합니다."),
             new GUIContent("매끄러움 (A.G)", "표면 마스크의 G 채널을 표시합니다."),
-            new GUIContent("하이라이트만 보기", "기본색과 툰 명암을 제외한 하이라이트 기여분을 표시합니다.")
+            new GUIContent("하이라이트만 보기", "기본색과 툰 명암을 제외한 하이라이트 기여분을 표시합니다."),
+            new GUIContent("발광 범위", "원본 UV0의 발광 마스크 R 채널을 표시합니다."),
+            new GUIContent("발광만 보기", "주 광원과 툰 명암에 독립적인 표면 발광만 표시합니다.")
         };
         private static readonly GUIContent[] VisibleFaces =
         {
@@ -63,7 +66,34 @@ namespace ToonShaderLab.Editor
             EditorGUILayout.LabelField("부위별 색상 / 명암 / 외곽선 / 하이라이트를 조절합니다.", EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.Space(6);
 
-            DrawSection("1. 기본 색상", ref baseOpen, () => DrawBase(materialEditor, baseMap, baseColor));
+            DrawSection("1. 기본 색상", ref baseOpen, () =>
+            {
+                DrawBase(materialEditor, baseMap, baseColor);
+                var regionColor = FindProperty("_RegionColorEnabled", properties);
+                materialEditor.ShaderProperty(regionColor, new GUIContent("부위별 기본색 보정", "R/G 마스크로 지정한 부위의 색만 조정합니다. 조명과 툰 명암 경계는 유지됩니다."));
+                if (regionColor.hasMixedValue || regionColor.floatValue > 0.5f)
+                {
+                    materialEditor.TexturePropertySingleLine(new GUIContent("색상 부위 마스크", "유즈하: R 피부 / G 머리카락. 검정 영역은 보정하지 않습니다."), FindProperty("_ColorRegionMask", properties));
+                    materialEditor.ShaderProperty(FindProperty("_RegionTintR", properties), "R 영역 색 배율");
+                    materialEditor.ShaderProperty(FindProperty("_RegionSaturationR", properties), "R 영역 채도");
+                    materialEditor.ShaderProperty(FindProperty("_RegionTintG", properties), "G 영역 색 배율");
+                    materialEditor.ShaderProperty(FindProperty("_RegionSaturationG", properties), "G 영역 채도");
+                }
+                var localTone = FindProperty("_LocalToneEnabled", properties);
+                materialEditor.ShaderProperty(localTone, new GUIContent("볼·머리 음영 보정", "기존 툰 명암 경계를 유지하며 전용 마스크로 색과 음영 깊이를 조정합니다."));
+                if (localTone.hasMixedValue || localTone.floatValue > 0.5f)
+                {
+                    materialEditor.TexturePropertySingleLine(new GUIContent("국소 보정 마스크", "R: 볼 / G: 텍스처의 머리 음영 / B: 머리 전체. 눈과 의상은 검정으로 제외합니다."), FindProperty("_LocalToneMask", properties));
+                    DrawColor(materialEditor, FindProperty("_CheekTint", properties), new GUIContent("볼 색 배율"));
+                    materialEditor.ShaderProperty(FindProperty("_CheekStrength", properties), "볼 붉은 기운");
+                    materialEditor.ShaderProperty(FindProperty("_HairDepthTint", properties), "머리 음영 색 배율");
+                    materialEditor.ShaderProperty(FindProperty("_HairDepthStrength", properties), "머리 음영 깊이");
+                }
+                var darkDetail = FindProperty("_DarkDetailEnabled", properties);
+                materialEditor.ShaderProperty(darkDetail, new GUIContent("검정 디테일 색 보정", "현재 머티리얼의 검정에 가까운 텍스처 영역만 색을 바꿉니다. 알파나 그리는 순서는 변경하지 않습니다."));
+                if (darkDetail.hasMixedValue || darkDetail.floatValue > 0.5f)
+                    DrawColor(materialEditor, FindProperty("_DarkDetailColor", properties), new GUIContent("검정 디테일 대체 색", "조명 적용 전의 색입니다. 속눈썹처럼 순수 검정으로 뭉치는 디테일에 사용합니다."));
+            });
             DrawSection("2. 툰 명암", ref shadingOpen, () =>
                 DrawShading(materialEditor, properties, litColor, shadowColor, shadowStrength, threshold, softness));
             DrawSection("3. 아웃라인", ref outlineOpen, () =>
@@ -71,7 +101,8 @@ namespace ToonShaderLab.Editor
             DrawSection("4. 기본 하이라이트", ref highlightOpen, () =>
                 DrawHighlight(materialEditor, highlightEnabled, highlightMask, materialMask, surfaceMask,
                     highlightColor, highlightIntensity, highlightSmoothness));
-            DrawSection("5. 화면 확인", ref previewOpen, () => DrawPreview(materialEditor, displayMode));
+            DrawSection("5. 기본 발광", ref emissionOpen, () => DrawEmission(materialEditor, properties));
+            DrawSection("6. 화면 확인", ref previewOpen, () => DrawPreview(materialEditor, displayMode));
             DrawSection("추가 설정", ref advancedOpen, () =>
                 DrawPopup(materialEditor, cull, new GUIContent("표시할 면", "기본은 앞면만 표시합니다. 투명 표현을 켜는 기능은 아닙니다."), VisibleFaces));
         }
@@ -175,6 +206,23 @@ namespace ToonShaderLab.Editor
                 EditorGUILayout.HelpBox(label + "는 데이터 텍스처입니다. Import Settings에서 sRGB (Color Texture)를 꺼야 원래 채널값으로 계산됩니다.", MessageType.Warning);
         }
 
+        private void DrawEmission(MaterialEditor editor, MaterialProperty[] properties)
+        {
+            var enabled = FindProperty("_EmissionEnabled", properties);
+            var mask = FindProperty("_EmissionMask", properties);
+            editor.ShaderProperty(enabled, new GUIContent("발광 사용", "선택 부위에 조명과 독립적인 표면 발광을 더합니다."));
+            editor.TexturePropertySingleLine(new GUIContent("발광 범위 마스크", "R 채널. 원본 UV0를 사용하며 기본색 타일링과 독립적입니다."), mask);
+            WarnIfSrgbTexture(mask, "발광 범위 마스크");
+            if (!mask.hasMixedValue && mask.textureValue == null)
+                EditorGUILayout.HelpBox("발광 범위 마스크가 없으면 발광하지 않습니다.", MessageType.Info);
+            using (new EditorGUI.DisabledScope(!enabled.hasMixedValue && enabled.floatValue < 0.5f))
+            {
+                DrawColor(editor, FindProperty("_SurfaceEmissionColor", properties), new GUIContent("발광 색 배율", "기본 텍스처의 원래 색에 곱합니다. 흰색은 원래 색을 유지합니다."));
+                editor.ShaderProperty(FindProperty("_EmissionIntensity", properties), new GUIContent("발광 강도", "0이면 추가 발광이 없습니다. HDR 밝기는 Bloom 적용 시 번짐에 영향을 줍니다."));
+            }
+            EditorGUILayout.LabelField("표면 발광과 Bloom은 별개입니다. 먼저 후처리를 끄고 적용 범위를 확인하세요.", EditorStyles.wordWrappedMiniLabel);
+        }
+
         private static void DrawPreview(MaterialEditor editor, MaterialProperty mode)
         {
             DrawPopup(editor, mode, new GUIContent("표시 모드", "확인하려는 내용을 선택합니다. 머티리얼에 저장되며 Game 화면에도 적용됩니다."), DisplayModes);
@@ -205,6 +253,12 @@ namespace ToonShaderLab.Editor
                     break;
                 case 6:
                     message = "표면 마스크 A.G의 매끄러움입니다. 매끄러움 배율을 적용하기 전의 데이터입니다.";
+                    break;
+                case 8:
+                    message = "발광 마스크의 선택 영역입니다. 같은 재질을 공유하는 다른 부위에 번지지 않는지 확인하세요.";
+                    break;
+                case 9:
+                    message = "조명과 독립적인 추가 발광입니다. 발광이 꺼져 있거나 강도가 0이면 검정색입니다.";
                     break;
                 case 7:
                     message = "추가되는 하이라이트만 표시합니다. 광원 또는 카메라를 움직여 반응을 확인하세요. 하이라이트가 꺼져 있거나 강도가 0이면 검정색입니다.";

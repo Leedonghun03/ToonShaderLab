@@ -11,11 +11,29 @@ TEXTURE2D(_MaterialMask);
 SAMPLER(sampler_MaterialMask);
 TEXTURE2D(_SurfaceMask);
 SAMPLER(sampler_SurfaceMask);
+TEXTURE2D(_EmissionMask);
+SAMPLER(sampler_EmissionMask);
+TEXTURE2D(_ColorRegionMask);
+SAMPLER(sampler_ColorRegionMask);
+TEXTURE2D(_LocalToneMask);
+SAMPLER(sampler_LocalToneMask);
 
 // 모든 패스가 같은 배치를 사용하여 SRP Batcher와 호환되도록 한다.
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
     half4 _BaseColor;
+    half4 _DarkDetailColor;
+    float _DarkDetailEnabled;
+    float _RegionColorEnabled;
+    half4 _RegionTintR;
+    half4 _RegionTintG;
+    float _RegionSaturationR;
+    float _RegionSaturationG;
+    float _LocalToneEnabled;
+    half4 _CheekTint;
+    half4 _HairDepthTint;
+    float _CheekStrength;
+    float _HairDepthStrength;
     half4 _LitColor;
     half4 _ShadowColor;
     half4 _OutlineColor;
@@ -30,6 +48,9 @@ CBUFFER_START(UnityPerMaterial)
     float _HighlightEnabled;
     float _HighlightIntensity;
     float _HighlightSmoothness;
+    float _EmissionEnabled;
+    float _EmissionIntensity;
+    half4 _SurfaceEmissionColor;
 CBUFFER_END
 
 struct ToonAttributes
@@ -67,9 +88,29 @@ ToonVaryings ToonVertex(ToonAttributes input)
     return output;
 }
 
-half3 ReadBaseColor(float2 uv)
+half3 ReadBaseColor(float2 uv, float2 maskUV)
 {
-    return SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb * _BaseColor.rgb;
+    half3 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb;
+    // 선택한 머티리얼의 검정 디테일만 보정한다. 불투명한 속눈썹을 알파로 제거하지 않는다.
+    // 0.02는 선형 색 공간의 경계이며, 필터링된 가장자리에서 부드럽게 원래 색으로 돌아간다.
+    if (_DarkDetailEnabled > 0.5)
+    {
+        half peakChannel = max(albedo.r, max(albedo.g, albedo.b));
+        half detailMask = 1.0h - smoothstep(0.0h, 0.02h, peakChannel);
+        albedo = lerp(albedo, _DarkDetailColor.rgb, detailMask);
+    }
+    // 원본의 명암과 디테일을 유지하면서 지정한 UV 영역의 기본색만 보정한다.
+    // 기본값은 꺼짐이며 눈/속눈썹 등 공유 텍스처의 다른 머티리얼에 영향을 주지 않는다.
+    if (_RegionColorEnabled > 0.5)
+    {
+        half2 region = saturate(SAMPLE_TEXTURE2D(_ColorRegionMask, sampler_ColorRegionMask, maskUV).rg);
+        half luminance = dot(albedo, half3(0.2126h, 0.7152h, 0.0722h));
+        half3 tintR = max(0, lerp(luminance.xxx, albedo, _RegionSaturationR)) * _RegionTintR.rgb;
+        half3 tintG = max(0, lerp(luminance.xxx, albedo, _RegionSaturationG)) * _RegionTintG.rgb;
+        albedo = lerp(albedo, tintR, region.r);
+        albedo = lerp(albedo, tintG, region.g);
+    }
+    return albedo * _BaseColor.rgb;
 }
 
 half EvaluateLightBand(float3 normalWS, float3 lightDirectionWS)
